@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Massa vesting viewer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Massa vesting viewer</h1>
+    <div>
+        <input type="text" id="address" placeholder="Wallet address" value=""/>
+    </div>
+    <div>
+        <input type="button" onclick="getVesting()" value="View vesting" />
+    </div>
+    <div>
+        Your vesting available to claim: <span id="vesting">-</span>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@massalabs/massa-web3@latest/bundle.js"></script>
+    <script type="text/javascript" src="vesting_viewer.js"></script>
+
+    <script>
+        async function getVesting() {
+            const walletAddress = document.getElementById("address").value;
+            document.getElementById("vesting").textContent = "Loading..";
+            const vestingAvailable = await vestingViewer(walletAddress);
+            document.getElementById("vesting").textContent = vestingAvailable + " MAS";
+        }
+    </script>
+</body>
+</html>

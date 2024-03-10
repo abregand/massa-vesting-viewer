@@ -1,0 +1,36 @@
+body {
+    background-color: #656D78;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+input {
+    background-color: #DA4453;
+    border: 1px solid #000000;
+}
+
+input::placeholder {
+    color: #77111b;
+}
+
+input:hover {
+    background-color: #ED5565;
+}
+
+input[type="text"] {
+    width: 60ch;
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+}
+
+input[type="button"] {
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+}
+
+div {
+    margin: 5px;
+}
