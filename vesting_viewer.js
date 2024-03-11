@@ -79,7 +79,9 @@ async function vestingViewer(walletAddress) {
         throw new Error('Error: datastore entries length invalid');
     }
 
-    let availableToClaim = BigInt(0);
+    let availableToClaimExport = BigInt(0);
+    let claimedAmountExport = BigInt(0);
+    let totalAmountExport = BigInt(0);
     let now = Date.now();
     for (let i = 0; i < queryKeys.length; i += 2) {
         let vestingInfoSerialized = res[i].candidate_value;
@@ -155,8 +157,10 @@ async function vestingViewer(walletAddress) {
         }
         // update the available amount
         sessions[i / 2].availableAmount = availableAmount - claimedAmount;
-        availableToClaim += availableAmount - claimedAmount;
+        availableToClaimExport += availableAmount - claimedAmount;
+        claimedAmountExport += claimedAmount;
+        totalAmountExport += vestingInfo.totalAmount;
     }
 
-    return window.massa.toMAS(availableToClaim).toString();
+    return {'availableAmount': window.massa.toMAS(availableToClaimExport).toString(), 'claimedAmount': window.massa.toMAS(claimedAmountExport).toString(), 'totalAmount': window.massa.toMAS(totalAmountExport).toString()};
 }

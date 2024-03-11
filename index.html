@@ -12,10 +12,25 @@
         <input class="form-control text-center" type="text" id="address" placeholder="Wallet address" value=""/>
     </div>
     <div>
-        <button type="button" class="btn btn-danger" onclick="getVesting()">View amount available</button>
+        <button type="button" class="btn btn-danger" onclick="getVesting()">View vesting info</button>
     </div>
     <div class="py-5">
-        <code>Available to claim<br><span class="badge text-bg-danger" id="vesting">-</span></code>
+        <div>
+            <code>
+                Available to claim
+                <br>
+                <span class="badge text-bg-danger" id="availableAmount">-</span>
+            </code>
+        </div>
+        <div class="py-3">
+            <code class="text-dark">
+                Already claimed <span class="fst-italic" id="percentageClaimedAmount"></span>
+                <br>
+                <span class="badge text-bg-dark">
+                    <span id="claimedAmount">-</span>/<span id="totalAmount">-</span>
+                </span>
+            </code>
+        </div>
     </div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@massalabs/massa-web3@latest/bundle.js"></script>
@@ -24,9 +39,15 @@
     <script>
         async function getVesting() {
             const walletAddress = document.getElementById("address").value;
-            document.getElementById("vesting").textContent = "Loading..";
-            const vestingAvailable = await vestingViewer(walletAddress);
-            document.getElementById("vesting").textContent = vestingAvailable + " MAS";
+            document.getElementById("availableAmount").textContent = "Loading..";
+            document.getElementById("claimedAmount").textContent = "Loading..";
+            document.getElementById("totalAmount").textContent = "Loading..";
+            document.getElementById("percentageClaimedAmount").textContent = "";
+            const vestingInfos = await vestingViewer(walletAddress);
+            document.getElementById("availableAmount").textContent = vestingInfos['availableAmount'] + " MAS";
+            document.getElementById("claimedAmount").textContent = vestingInfos['claimedAmount'];
+            document.getElementById("totalAmount").textContent = vestingInfos['totalAmount'] + " MAS";
+            document.getElementById("percentageClaimedAmount").textContent = "(" + (vestingInfos['claimedAmount']/vestingInfos['totalAmount']*100).toPrecision(3) + "%)";
         }
     </script>
 </body>
