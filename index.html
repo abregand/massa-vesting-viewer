@@ -16,21 +16,29 @@
     </div>
     <div class="py-5">
         <div>
+            <code class="text-secondary">
+                Final balance
+                <br>
+                <span class="badge text-bg-secondary" id="finalBalance">-</span>
+            </code>
+        </div>
+        <div class="pt-3">
             <code>
-                Available to claim
+                Vesting available to claim
                 <br>
                 <span class="badge text-bg-danger" id="availableAmount">-</span>
             </code>
         </div>
-        <div class="py-3">
+        <div class="pt-3">
             <code class="text-dark">
-                Already claimed <span class="fst-italic" id="percentageClaimedAmount"></span>
+                Vesting already claimed <span class="fst-italic" id="percentageClaimedAmount"></span>
                 <br>
                 <span class="badge text-bg-dark">
                     <span id="claimedAmount">-</span>/<span id="totalAmount">-</span>
                 </span>
             </code>
         </div>
+        <div class="mt-5 alert alert-success fw-bold d-none" id="newRollInfo">YOU CAN BUY NEW ROLL!</div>
     </div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@massalabs/massa-web3@latest/bundle.js"></script>
@@ -39,15 +47,22 @@
     <script>
         async function getVesting() {
             const walletAddress = document.getElementById("address").value;
+            document.getElementById("newRollInfo").classList.add("d-none");
+            document.getElementById("finalBalance").textContent = "Loading..";
             document.getElementById("availableAmount").textContent = "Loading..";
             document.getElementById("claimedAmount").textContent = "Loading..";
             document.getElementById("totalAmount").textContent = "Loading..";
             document.getElementById("percentageClaimedAmount").textContent = "";
             const vestingInfos = await vestingViewer(walletAddress);
+            document.getElementById("finalBalance").textContent = vestingInfos['finalBalance'] + " MAS";
             document.getElementById("availableAmount").textContent = vestingInfos['availableAmount'] + " MAS";
             document.getElementById("claimedAmount").textContent = vestingInfos['claimedAmount'];
             document.getElementById("totalAmount").textContent = vestingInfos['totalAmount'] + " MAS";
             document.getElementById("percentageClaimedAmount").textContent = "(" + (vestingInfos['claimedAmount']/vestingInfos['totalAmount']*100).toPrecision(3) + "%)";
+            if(parseFloat(vestingInfos['finalBalance']+vestingInfos['availableAmount']) >= 100)
+            {
+                document.getElementById("newRollInfo").classList.remove("d-none");
+            }
         }
     </script>
 </body>

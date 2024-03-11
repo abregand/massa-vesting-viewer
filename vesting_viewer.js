@@ -10,6 +10,10 @@ async function vestingViewer(walletAddress) {
         true
     );
 
+    // Get final balance account
+    const accountInfo = await client.publicApiClient.getAddresses([walletAddress]);
+    finalBalance = accountInfo[0].final_balance;
+
     // Fetch datastore keys associated with the smart contract address
     const addrInfo = await client.publicApiClient.getAddresses([SC_ADDRESS]);
     const allKeys = addrInfo[0].candidate_datastore_keys;
@@ -162,5 +166,5 @@ async function vestingViewer(walletAddress) {
         totalAmountExport += vestingInfo.totalAmount;
     }
 
-    return {'availableAmount': window.massa.toMAS(availableToClaimExport).toString(), 'claimedAmount': window.massa.toMAS(claimedAmountExport).toString(), 'totalAmount': window.massa.toMAS(totalAmountExport).toString()};
+    return {'finalBalance': finalBalance.toString(), 'availableAmount': window.massa.toMAS(availableToClaimExport).toString(), 'claimedAmount': window.massa.toMAS(claimedAmountExport).toString(), 'totalAmount': window.massa.toMAS(totalAmountExport).toString()};
 }
