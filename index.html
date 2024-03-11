@@ -43,26 +43,13 @@
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@massalabs/massa-web3@latest/bundle.js"></script>
     <script type="text/javascript" src="vesting_viewer.js"></script>
+    <script type="text/javascript" src="cookies_manager.js"></script>
 
     <script>
-        async function getVesting() {
-            const walletAddress = document.getElementById("address").value;
-            document.getElementById("newRollInfo").classList.add("d-none");
-            document.getElementById("finalBalance").textContent = "Loading..";
-            document.getElementById("availableAmount").textContent = "Loading..";
-            document.getElementById("claimedAmount").textContent = "Loading..";
-            document.getElementById("totalAmount").textContent = "Loading..";
-            document.getElementById("percentageClaimedAmount").textContent = "";
-            const vestingInfos = await vestingViewer(walletAddress);
-            document.getElementById("finalBalance").textContent = vestingInfos['finalBalance'] + " MAS";
-            document.getElementById("availableAmount").textContent = vestingInfos['availableAmount'] + " MAS";
-            document.getElementById("claimedAmount").textContent = vestingInfos['claimedAmount'];
-            document.getElementById("totalAmount").textContent = vestingInfos['totalAmount'] + " MAS";
-            document.getElementById("percentageClaimedAmount").textContent = "(" + (vestingInfos['claimedAmount']/vestingInfos['totalAmount']*100).toPrecision(3) + "%)";
-            if(parseFloat(vestingInfos['finalBalance']+vestingInfos['availableAmount']) >= 100)
-            {
-                document.getElementById("newRollInfo").classList.remove("d-none");
-            }
+        let walletAddressCookie = getCookie("walletAddress");
+        if(walletAddressCookie)
+        {
+            document.getElementById("address").value = walletAddressCookie;
         }
     </script>
 </body>

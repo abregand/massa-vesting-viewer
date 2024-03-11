@@ -1,3 +1,54 @@
+async function getVesting() {
+    document.getElementById("newRollInfo").classList.add("d-none");
+    document.getElementById("finalBalance").textContent = "Loading..";
+    document.getElementById("availableAmount").textContent = "Loading..";
+    document.getElementById("claimedAmount").textContent = "Loading..";
+    document.getElementById("totalAmount").textContent = "Loading..";
+    document.getElementById("percentageClaimedAmount").textContent = "";
+    const walletAddress = document.getElementById("address").value;
+    if(await checkValidWalletAddress(walletAddress)) {
+        setCookie("walletAddress", walletAddress);
+        const vestingInfos = await vestingViewer(walletAddress);
+        document.getElementById("finalBalance").textContent = vestingInfos['finalBalance'] + " MAS";
+        document.getElementById("availableAmount").textContent = vestingInfos['availableAmount'] + " MAS";
+        document.getElementById("claimedAmount").textContent = vestingInfos['claimedAmount'];
+        document.getElementById("totalAmount").textContent = vestingInfos['totalAmount'] + " MAS";
+        document.getElementById("percentageClaimedAmount").textContent = "(" + (vestingInfos['claimedAmount']/vestingInfos['totalAmount']*100).toPrecision(3) + "%)";
+        if(parseFloat(vestingInfos['finalBalance']+vestingInfos['availableAmount']) >= 100)
+        {
+            document.getElementById("newRollInfo").classList.remove("d-none");
+        }
+    }
+    else {
+        document.getElementById("newRollInfo").classList.add("d-none");
+        document.getElementById("finalBalance").textContent = "-";
+        document.getElementById("availableAmount").textContent = "-";
+        document.getElementById("claimedAmount").textContent = "-";
+        document.getElementById("totalAmount").textContent = "-";
+        document.getElementById("percentageClaimedAmount").textContent = "";
+        alert('Wallet address not valid!');
+    }
+}
+
+async function checkValidWalletAddress(walletAddress) {
+    const URL_API = "https://mainnet.massa.net/api/v2";
+    const CHAIN_ID = 77658377;
+
+    // Initialize the client to interact with the Massa network
+    const client = await window.massa.ClientFactory.createDefaultClient(
+        URL_API,
+        CHAIN_ID,
+        true
+    );
+
+    try {
+        await client.publicApiClient.getAddresses([walletAddress]);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 async function vestingViewer(walletAddress) {
     const URL_API = "https://mainnet.massa.net/api/v2";
     const CHAIN_ID = 77658377;
